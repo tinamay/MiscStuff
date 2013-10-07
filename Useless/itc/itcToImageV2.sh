@@ -76,6 +76,7 @@ for file in `gfind "$AlbumArtwork" -name '*.itc'`; do
 		elif [[ $imageType -eq 0x0000000D ]] ; then
 			targetFile="$DestinationDir/$xpref-$i.jpg"
 			if [ ! -f "$targetFile" ]; then
+				echo JPG
 				dd skip=$imageStart count=$imageSize if="$file" of="$targetFile" bs=1 &> /dev/null
 			fi
 		else
