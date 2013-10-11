@@ -24,11 +24,6 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-	debian_chroot=$(cat /etc/debian_chroot)
-fi
-
 # MacPorts Bash shell command completion
 if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
   . /opt/local/etc/profile.d/bash_completion.sh
@@ -38,9 +33,24 @@ if [ -f /opt/local/share/git-core/git-prompt.sh ]; then
     . /opt/local/share/git-core/git-prompt.sh
 fi
 
+COLOR_RED="\[\e[0;22;31m\]"
+COLOR_GREEN="\[\e[0;22;32m\]"
+COLOR_YELLOW="\[\e[33m\]"
+COLOR_BLUE="\[\e[0;22;34m\]"
+COLOR_PURPLE="\[\e[0;22;35m\]"
+COLOR_CYAN="\[\e[0;22;36m\]"
 
-PS1='$(__git_ps1 "(%s) ")\e[34;33m\]\u@\[\e[35;1m\]\H \[\e[0m\]\w] $ '
-#	PS1="${PS1}\u@\h:\W$ "
+COLOR_RED_BOLD="\[\e[0;1;31m\]"
+COLOR_GREEN_BOLD="\[\e[0;1;32m\]"
+COLOR_YELLOW_BOLD="\[\e[0;1;33m\]"
+COLOR_BLUE_BOLD="\[\e[0;1;34m\]"
+COLOR_PURPLE_BOLD="\[\e[0;1;35m\]"
+COLOR_CYAN_BOLD="\[\e[0;1;36m\]"
+
+COLOR_NONE="\[\e[0m\]"
+COLOR_NONE_BOLD="\[\e[1m\]"
+
+PS1="${COLOR_YELLOW}\u@${COLOR_PURPLE_BOLD}\h${COLOR_NONE}:${COLOR_PURPLE}\w\$(__git_ps1 \" ${COLOR_CYAN}(%s)\")${COLOR_NONE}\\\$ "
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -71,8 +81,7 @@ export LESS_TERMCAP_se=$'\E[0m'        # Standout end
 export LESS_TERMCAP_mb=$'\E[01;31m'    # Blink
 export LESS_TERMCAP_me=$'\E[0m'        # End
 
-
-#Uses coreutils installe w/ MacPorts
+#Uses coreutils installed w/ MacPorts
 if [ "$TERM" != "dumb" ]; then
     export LS_OPTIONS='--color=auto'
     eval `gdircolors ~/.dir_colors`
