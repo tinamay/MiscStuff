@@ -21,6 +21,12 @@ function getColorForLine($lineName) {
 		$color['fg'] = "white";
 		$color['bg'] = "#E2007A";
 		return $color;
+      
+      case "D":
+      $color['fg'] = "#FFFFFF";
+      $color['bg'] = "#F39911";
+      return $color;
+      
 		case "CO":
 		$color['fg'] = "black";
 		$color['bg'] = "#FFED00";

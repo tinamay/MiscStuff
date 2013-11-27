@@ -9,22 +9,18 @@ But it's an aweful website…
 
 Since there is no public API (OpenData where are you ?), I did some work to parse it's data to maybe reuse it in a another website / app / whatever. 
 
-### Working with mobitrans 
 
-Mobitrans displays for each Bus/Tram station the 2 next schedule in each direction. 
+## PHP page 
+There is a demo available at : [tag.riegler.fr](tag.riegler.fr). 
 
-For a single station, this a different page for each line who serves the station. 
-
-So the first thing to do is the retrieve every single page corresponding to a station. To do that we need to iterate all the stations of all the lines. 
-
-* All the bus/tram lines are avaiable at `index.php?p=13&I=sessionID` (I don't know yet how the session ID are managed but `c024ey7` works for me) 
-* Their id is are in options of the `f_ligne` form  
-* from now on, let's call these lineIDs 
-
-With these id we can acces all the station of a particular line 
-
-* All the station are available at `index.php?p=41&I=sessionID&ligne=lineID`
-* On this page we just need to retrive each StationID in each url in the `id` parameter of each url. 
+* 4 PHP files to parse the data from the 4 main pages of mobitrans :
+	* The list of lines 
+	* The list of stations for a particular line 
+	* The nearest stations for a particular geolocation
+	* The remaing time for a particular line at a particular station
+	
+* 4 PHP file to display the parsed informations
+* 1 misc php with some useful functions
 
 
 ## Python script 
@@ -38,7 +34,6 @@ With these id we can acces all the station of a particular line
 
 
 
-## PHP page 
 
 
 

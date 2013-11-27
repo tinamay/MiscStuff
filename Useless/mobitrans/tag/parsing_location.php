@@ -2,6 +2,13 @@
 include('simple_html_dom.php');
 include('misc_tag.php');
 
+function cmpDistance($a, $b) {
+    if ($a['distance'] == $b['distance']) {
+        return 0;
+    }
+    return ($a['distance'] < $b['distance']) ? -1 : 1;
+}
+
 $res = array();
 
 if (isset($_GET["lat"]) && isset($_GET["lgt"])) {
@@ -19,14 +26,17 @@ $osmUrl = "http://www.openstreetmap.org/#map=19/".$latitude."/".$longitude;
 
 $html = file_get_html($fullUrl);
 
+
 if(count($html->find('div.error')) == 1) {
 	echo "<a href=".$fullUrl.">Mobitrans</a> <br />";
 	echo json_encode("error");
 	exit();
 }
+
 $resultNode = $html->find('div.corpsL')[0];
 
 $nearStations = $resultNode->find('div');
+$linesForStations = array();
 
 foreach ($nearStations as $aLine) {
 	$lineSpanNode = $aLine->find('span')[1];
@@ -47,7 +57,13 @@ foreach ($nearStations as $aLine) {
 		$stationInfo['distance'] = intval($distance);
 		$stationInfo['stationID'] = intval($stationId);
 		array_push($stationList, $stationInfo);
-		//echo "<a href=./arret.php?id=".$stationId.">".$stationName."</a> (".$distance.")<br/>";
+      if (! array_key_exists($stationName,$linesForStations)) {
+         $linesForStations[$stationName] = array();
+         $linesForStations[$stationName]['name'] = $stationName;
+         $linesForStations[$stationName]['distance'] = intval($distance);
+         $linesForStations[$stationName]['lines'] = array(); 
+      }
+         array_push($linesForStations[$stationName]['lines'], array($lineName,intval($stationId)));       
 	}
 	$lineInfo['line'] = $lineName;
 	$lineInfo['bgcolor'] = getColorForLine($lineName)['bg'];
@@ -56,11 +72,16 @@ foreach ($nearStations as $aLine) {
 
 	array_push($res,$lineInfo);
 }
+
+uasort($linesForStations,'cmpDistance');
+
+
 if(isset($_GET['json'])) {
 	header("Content-type: application/json");
 	echo json_encode($res);
 } else if (isset($_GET['vardump'])) {
 	echo "<a href=".$fullUrl.">Sur Mobitrans</a> - <a href=".$osmUrl.">Position sur OpenStreetMap</a><br/>";
 	echo var_dump($res);
+   var_dump($linesForStations);
 }
 ?>

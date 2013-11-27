@@ -104,6 +104,7 @@ def getStationsId(lineID):
         params = urlparse.parse_qs(url.query)
         if 'id' in params:
             resultList.append(int(params['id'][0])) #Appending IDs as int to sort them
+    print resultList
     return resultList
 
 

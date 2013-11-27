@@ -1,3 +1,13 @@
+<!--
+Parsing mobitrans single station page 
+
+
+return an array : res 
+res['station'] : station name
+res['line'] : line number
+res['directions'] : directions, an array 
+ 
+-->
 <?php
 	 include('simple_html_dom.php');
     include('misc_tag.php');

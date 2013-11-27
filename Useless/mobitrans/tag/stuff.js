@@ -25,30 +25,6 @@ $.ajaxSetup({
 });
 
 
-function showNearStationsForLine($target) {
-    "use strict";
-    if($("#nearStationsForLineList").length == 0) {
-        var nearStations = location.hash;
-        var latlgtIndex = nearStations.split('/');
-        var index = latlgtIndex[0];
-        var lat = latlgtIndex[1];
-        var lgt = latlgtIndex[2];
-        var targetUrl = "./nearStations.php?lat=" + lat + "&lgt=" + lgt;
-        $("#content_container").load(targetUrl, function () {
-            $("#nearStationsForLineList").hide();
-            $("#nearLinesList").hide();
-
-            $('[id^="lineIndex"]').hide();
-            $("#nearStationsForLineList").show();
-            $(index).slideToggle();      
-        });
-    } else {
-        $('[id^="lineIndex"]').hide();
-        $("#nearStationsForLineList").show();
-        $target.slideToggle();
-    }
-}
-
 function showStationTimes(stationID) {
     "use strict";
     var targetUrl = "time.php/?id=" + stationID;
@@ -60,22 +36,39 @@ function showStationTimes(stationID) {
     });
 }
 
+function showStationsForLine(lineID) {
+    var targetUrl = "stationsForLine.php?id=" + lineID; 
+    var div = $("#content_container").children()[0];
+    $("#content_container").load(targetUrl, function () {
+        window.location.hash = "stationsForLine" + lineID;
+        $("#lineList").slideToggle();
+        $("#stationsForLine").hide();
+        $("#stationsForLine").slideToggle();
+    });
+}
 
 /* ajax */
 
-function loadNearLines(lat, lgt) {
-    targetUrl = "./nearStations.php?lat=" + lat + "&lgt=" + lgt;
+function loadLinesList() {
+    targetUrl = "./lines.php"
     $("#content_container").load(targetUrl, function () {
-        location.hash = "lines" + lat + "/" + lgt;
-        $("#nearStationsForLineList").hide();
-        $("#nearLinesList").hide();        
-        $("#nearLinesList").slideToggle("slow", "swing");
-             
+        location.hash = "lineList"
+        $("#linesList").hide();        
+        $("#linesList").slideToggle("slow", "swing");
+    });
+}
+
+function loadLinesForStations(lat, lgt) {
+    targetUrl = "./stations.php?lat=" + lat + "&lgt=" + lgt;
+    $("#content_container").load(targetUrl, function () {
+        location.hash = "linesForStations" + lat + "/" + lgt;
+        $("#linesForStations").hide();        
+        $("#linesForStations").slideToggle("slow", "swing");
     });
 }
 
 
-function getNearLines() {
+function getNearStations() {
     "use strict";
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -83,39 +76,25 @@ function getNearLines() {
             var lat, lgt, targetUrl;
             lat = position.coords.latitude;
             lgt = position.coords.longitude;
-            loadNearLines(lat, lgt);
+            loadLinesForStations(lat, lgt);
         });
     }
 }
 
-
-
 // ///////////////////////////////////////////////////////////////////
 
-$(document).on("click", "#nearLines", function () {
-    $("#loadingAnim img").show();
-    $("#indexChoices").slideToggle("slow", "swing", function () {
-        getNearLines();
-    })
-});
-
-//Change content to nearStations for line #
-$(document).on("click", ".singleLine", function () {
-    var target; //line
-    //        line = $(this).attr('line');
-    target = $(this).attr('target');
-    $('#nearLinesList').slideToggle("slow", "swing", function () {
-        showNearStationsForLine($("#" + target));
-        location.hash = target + "/" +location.hash.substring(6); //remove #lines from older hash
-    });
-});
-
-
-$(document).on("click", ".singleStation", function () {
+$(document).on("click", ".aStation", function () {
     var stationID = $(this).attr('target');    
     showStationTimes(stationID);
-    $("#nearStationsForLineList").slideToggle();
+    $("#linesForStations").slideToggle();
 });
+
+$(document).on("click", ".aLine", function () {
+    var lineID = $(this).attr('target');  
+    showStationsForLine(lineID);
+    $("#linesForStations").slideToggle();
+});
+
 
 $(window).on('hashchange', function(e) {
     //console.log("writting " + e.originalEvent.oldURL);
@@ -128,6 +107,9 @@ $(window).on('hashchange', function(e) {
 });
 
 
+
+
+
 ///////////////////////////////////////////////////////
 $(document).ready(function () {    
     document.cookie="#";
@@ -137,8 +119,19 @@ $(document).ready(function () {
     $('#loadingAnim img').hide(); /* hidding the spinning ball, only showing on ajax */
     
     
+
+    $("#linesList").click( function () {
+        $("#loadingAnim img").show();
+        $("#indexChoices").slideToggle("slow", "swing", function () {
+            loadLinesList();
+        });
+    });
+    
     $("#nearStations").click(function () {
-        //NOTHING ... for the moment
+        $("#loadingAnim img").show();
+        $("#indexChoices").slideToggle("slow", "swing", function () {
+            getNearStations();
+        });
     });
 
     $("#backButton").click(function () {
@@ -160,26 +153,26 @@ $(document).ready(function () {
     ///
     if (window.location.hash) {
         var stationID, target;
-        if (location.hash.startsWith('#station')) {
-            stationID = location.hash.substring(8);
-            showStationTimes(stationID);
-        } else if (location.hash.startsWith('#lines')) {
-            var geocoords = location.hash.substring(6);
+        if (location.hash.startsWith('#linesForStations')) {
+            var geocoords = location.hash.substring(17);
             var latlgt = geocoords.split('/');
             var lat = latlgt[0];
             var lgt = latlgt[1];
-            loadNearLines(lat,lgt);
-        } else if (location.hash.startsWith('#lineIndex')){
-            //$('#nearLinesList').hide();
-            target = location.hash;//$($(location).attr('hash'));
-            showNearStationsForLine(target);
+            loadLinesForStations(lat,lgt);
+        } else if (location.hash.startsWith('#lineList')){
+            loadLinesList();
+        } else if (location.hash.startsWith('#stationsForLine')) {
+            lineID = location.hash.substring(16);
+            showStationsForLine(lineID);
+        } else if (location.hash.startsWith('#station')) {
+            stationID = location.hash.substring(8);
+            showStationTimes(stationID);
+        } else {
+            alert("unknown hash");
         }
     } else {
         $("#indexChoices").slideToggle("slow", "swing");
     }
-
-
-
 });
 
 

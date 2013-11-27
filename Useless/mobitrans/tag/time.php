@@ -6,14 +6,11 @@ $lineFg = $colors['fg'];
 
 $style = "style=\"background:$lineBg; color:$lineFg; margin-bottom:4px\"";	
 ?>
-
-
-
-<div id="singleStationTimes">
-	
+<?php echo "Ligne ".$res['line']."  -  Arrêt :".$res['station']?>
+<div id="singleStationTimes" style="margin-bottom: 2em;">
 	<?php foreach($res['directions'] as $a_direction) : ?>
 		<div class="tuile" style="margin-top:20px;">
-			<span class="text" <?php echo $style ?> > <?php echo $a_direction['name']?> </span>
+			<span class="text" <?php echo $style ?> ><?php echo $a_direction['name']?> </span>
 		</div>
 		<?php foreach($a_direction['time'] as $a_time) : ?>
 			<div class="tuile" style="margin-top:-7px;">
@@ -25,7 +22,6 @@ $style = "style=\"background:$lineBg; color:$lineFg; margin-bottom:4px\"";
 			</div>
 		<?php endforeach; ?>
 	<?php endforeach; ?>	
-	
 	
 	<!-- NO BUS - U MAD BRO ? -->
 	<?php if(count($res['directions']) == 0) :?>	
