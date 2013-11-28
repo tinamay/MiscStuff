@@ -1,12 +1,13 @@
 #################################################
 #												#
 #	         Makefile pour LaTeX                #
-#												#
+#			                                    #
+#           use : make file=cv.tex              #
 #################################################
 
 TEX_CMD := pdflatex
 TEX_FLAGS := #-c
-TEX := cv.tex
+TEX := $(file)
 TEX_PDF := $(TEX:.tex=.pdf)
 
 UNAME := $(shell uname)
@@ -29,13 +30,14 @@ tex: $(TEX_PDF)
 
 $(TEX_PDF): $(TEX) $(TEX_I_PDF)
 	$(TEX_CMD) $(TEX_FLAGS) '$<'
-	# $(TEX_CMD) $(TEX_FLAGS) '$<' #A priori pour table des matieres
-	# $(TEX_CMD) $(TEX_FLAGS) '$<' #A priori pour biblio
-	rm -rf $(TEX:.tex=.aux) $(TEX:.tex=.log) $(TEX=.tex=.out)
+# $(TEX_CMD) $(TEX_FLAGS) '$<' #A priori pour table des matieres
+# $(TEX_CMD) $(TEX_FLAGS) '$<' #A priori pour biblio
+	rm -rf $(TEX:.tex=.aux) $(TEX:.tex=.log) $(TEX:.tex=.out)
 
 %.pdf : *.svg
 	convert '$<' '$@'
 
-
 texclean:
-	rm -rf *.log *.aux *.toc *.out
+	@echo "Deleting compilation files"
+
+	@rm -rf *.log *.aux *.toc *.out
