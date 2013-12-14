@@ -1,3 +1,9 @@
+# Bash Script By Matthieu Riegler - http://matthieu.riegler.fr
+# Licence CC-BY 0 
+#
+# This script takes in input a iMessage account input and backs its conversations up as txt files. 
+# It also saves its pictures that are cached localy 
+
 #Parameter is a iMessage account (email or phone number i.e. +33616.... )
 if [ $# -lt 1 ]; then
     echo "Enter a iMessage account (email of phone number i.e +33616.....) "
