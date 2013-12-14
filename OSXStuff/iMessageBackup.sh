@@ -6,7 +6,7 @@ login=$1
 
 #Retrieve the text messages 
     
-sqlite3 chat.db "
+sqlite3 ~/Library/Messages/chat.db "
 select is_from_me,text from message where handle_id=(
 select handle_id from chat_handle_join where chat_id=(
 select ROWID from chat where guid='iMessage;-;$1')
@@ -15,7 +15,7 @@ select ROWID from chat where guid='iMessage;-;$1')
 
 #Retrieve the attached stored in the local cache
 
-sqlite3 chat.db "
+sqlite3 ~/Library/Messages/chat.db "
 select filename from attachment where rowid in (
 select attachment_id from message_attachment_join where message_id in (
 select rowid from message where cache_has_attachments=1 and handle_id=(
