@@ -11,7 +11,7 @@ Since there is no public API (OpenData where are you ?), I did some work to pars
 
 
 ## PHP page 
-There is a demo available at : [tag.riegler.fr](tag.riegler.fr). 
+There is a demo available at : ~~[tag.riegler.fr](tag.riegler.fr)~~ (actually broken since the original website was changed recently). 
 
 * 4 PHP files to parse the data from the 4 main pages of mobitrans :
 	* The list of lines 
