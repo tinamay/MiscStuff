@@ -6,7 +6,7 @@
 
 #Parameter is a iMessage account (email or phone number i.e. +33616.... )
 if [ $# -lt 1 ]; then
-    echo "Enter a iMessage account (email of phone number i.e +33616.....) "
+    echo marvin_de_cauwer@hotmail.com
 fi
 login=$1
 
